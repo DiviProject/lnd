@@ -3,7 +3,7 @@ package shachain
 import (
 	"encoding/hex"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
 )
 
 // changeBit is a functio that function that flips a bit of the hash at a

@@ -3,7 +3,7 @@ package lnwallet_test
 import (
 	"testing"
 
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lnd/lnwallet"
 )
 

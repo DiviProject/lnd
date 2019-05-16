@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/Divicoin/btcd/btcec"
 	"github.com/lightningnetwork/lightning-onion"
 	"github.com/lightningnetwork/lnd/lnwire"
 )

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lnd/lnwire"
 )
 

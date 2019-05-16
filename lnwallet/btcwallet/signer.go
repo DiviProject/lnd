@@ -1,14 +1,14 @@
 package btcwallet
 
 import (
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcwallet/waddrmgr"
-	base "github.com/btcsuite/btcwallet/wallet"
-	"github.com/btcsuite/btcwallet/walletdb"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/txscript"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
+	"github.com/Divicoin/btcwallet/waddrmgr"
+	base "github.com/Divicoin/btcwallet/wallet"
+	"github.com/Divicoin/btcwallet/walletdb"
 	"github.com/go-errors/errors"
 	"github.com/lightningnetwork/lnd/input"
 	"github.com/lightningnetwork/lnd/keychain"

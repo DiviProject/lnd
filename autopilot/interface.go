@@ -3,9 +3,9 @@ package autopilot
 import (
 	"net"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lnd/lnwire"
 )
 

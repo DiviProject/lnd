@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/integration/rpctest"
-	"github.com/btcsuite/btcd/rpcclient"
+	"github.com/Divicoin/btcd/chaincfg"
+	"github.com/Divicoin/btcd/integration/rpctest"
+	"github.com/Divicoin/btcd/rpcclient"
 )
 
 // logDir is the name of the temporary log directory.

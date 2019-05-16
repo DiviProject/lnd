@@ -16,8 +16,8 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/wire"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 	"github.com/lightningnetwork/lnd/lnrpc"

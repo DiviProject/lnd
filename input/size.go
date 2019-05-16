@@ -1,8 +1,8 @@
 package input
 
 import (
-	"github.com/btcsuite/btcd/blockchain"
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/blockchain"
+	"github.com/Divicoin/btcd/wire"
 )
 
 const (

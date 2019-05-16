@@ -3,9 +3,9 @@ package lnwallet
 import (
 	"encoding/json"
 
-	"github.com/btcsuite/btcd/blockchain"
-	"github.com/btcsuite/btcd/rpcclient"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/blockchain"
+	"github.com/Divicoin/btcd/rpcclient"
+	"github.com/Divicoin/btcutil"
 )
 
 const (

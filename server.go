@@ -16,11 +16,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/connmgr"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/connmgr"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
 	"github.com/coreos/bbolt"
 	"github.com/go-errors/errors"
 	sphinx "github.com/lightningnetwork/lightning-onion"
@@ -829,6 +829,11 @@ func newServer(listenAddrs []net.Addr, chanDB *channeldb.DB, cc *chainControl,
 		minRemoteDelay = minLtcRemoteDelay
 		maxRemoteDelay = maxLtcRemoteDelay
 	}
+	if primaryChain == divicoinChain {
+                chainCfg = cfg.Divicoin
+                minRemoteDelay = minBtcRemoteDelay
+                maxRemoteDelay = maxBtcRemoteDelay
+        }
 
 	var chanIDSeed [32]byte
 	if _, err := rand.Read(chanIDSeed[:]); err != nil {
@@ -1186,7 +1191,7 @@ func (s *server) Start() error {
 		// dedicated goroutine to maintain a set of persistent
 		// connections.
 		if !cfg.NoNetBootstrap && !(cfg.Bitcoin.SimNet || cfg.Litecoin.SimNet) &&
-			!(cfg.Bitcoin.RegTest || cfg.Litecoin.RegTest) {
+			!(cfg.Bitcoin.RegTest || cfg.Litecoin.RegTest || cfg.Divicoin.RegTest) {
 
 			bootstrappers, err := initNetworkBootstrappers(s)
 			if err != nil {

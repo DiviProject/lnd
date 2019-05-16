@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lnd/lnwallet"
 	"github.com/lightningnetwork/lnd/watchtower/blob"
 )

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lnd/lnrpc"
 	"github.com/lightningnetwork/lnd/lnwire"
 	"github.com/lightningnetwork/lnd/routing"

@@ -1,8 +1,8 @@
 package input
 
 import (
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/txscript"
+	"github.com/Divicoin/btcd/wire"
 )
 
 // Input represents an abstract UTXO which is to be spent using a sweeping

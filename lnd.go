@@ -33,11 +33,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcwallet/wallet"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcwallet/wallet"
 	proxy "github.com/grpc-ecosystem/grpc-gateway/runtime"
 	flags "github.com/jessevdk/go-flags"
-	"github.com/lightninglabs/neutrino"
+	"github.com/Divicoin/neutrino"
 
 	"github.com/lightningnetwork/lnd/autopilot"
 	"github.com/lightningnetwork/lnd/build"
@@ -113,16 +113,16 @@ func lndMain() error {
 
 	var network string
 	switch {
-	case cfg.Bitcoin.TestNet3 || cfg.Litecoin.TestNet3:
+	case cfg.Bitcoin.TestNet3 || cfg.Litecoin.TestNet3 || cfg.Divicoin.TestNet3:
 		network = "testnet"
 
-	case cfg.Bitcoin.MainNet || cfg.Litecoin.MainNet:
+	case cfg.Bitcoin.MainNet || cfg.Litecoin.MainNet ||  cfg.Divicoin.MainNet:
 		network = "mainnet"
 
 	case cfg.Bitcoin.SimNet:
 		network = "simnet"
 
-	case cfg.Bitcoin.RegTest:
+	case cfg.Bitcoin.RegTest ||  cfg.Divicoin.RegTest:
 		network = "regtest"
 	}
 
@@ -452,7 +452,7 @@ func main() {
 }
 
 // fileExists reports whether the named file or directory exists.
-// This function is taken from https://github.com/btcsuite/btcd
+// This function is taken from https://github.com/Divicoin/btcd
 func fileExists(name string) bool {
 	if _, err := os.Stat(name); err != nil {
 		if os.IsNotExist(err) {
@@ -468,8 +468,8 @@ func fileExists(name string) bool {
 // desired hostnames for the service. For production/public use, consider a
 // real PKI.
 //
-// This function is adapted from https://github.com/btcsuite/btcd and
-// https://github.com/btcsuite/btcutil
+// This function is adapted from https://github.com/Divicoin/btcd and
+// https://github.com/Divicoin/btcutil
 func genCertPair(certFile, keyFile string) error {
 	rpcsLog.Infof("Generating TLS certificates...")
 
@@ -701,6 +701,10 @@ func waitForWalletPassword(grpcEndpoints, restEndpoints []net.Addr,
 		chainConfig = cfg.Litecoin
 	}
 
+	if registeredChains.PrimaryChain() == divicoinChain {
+		chainConfig = cfg.Divicoin
+	}
+
 	// The macaroon files are passed to the wallet unlocker since they are
 	// also encrypted with the wallet's password. These files will be
 	// deleted within it and recreated when successfully changing the
@@ -816,6 +820,7 @@ func waitForWalletPassword(grpcEndpoints, restEndpoints []net.Addr,
 		netDir := btcwallet.NetworkDir(
 			chainConfig.ChainDir, activeNetParams.Params,
 		)
+
 		loader := wallet.NewLoader(
 			activeNetParams.Params, netDir, uint32(recoveryWindow),
 		)

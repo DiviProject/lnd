@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcd/wire"
 	"github.com/lightningnetwork/lnd/chanbackup"
 	"github.com/lightningnetwork/lnd/channelnotifier"
 )

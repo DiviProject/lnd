@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/btcsuite/btcd/blockchain"
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcwallet/wallet/txrules"
+	"github.com/Divicoin/btcd/blockchain"
+	"github.com/Divicoin/btcd/txscript"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
+	"github.com/Divicoin/btcwallet/wallet/txrules"
 	"github.com/lightningnetwork/lnd/input"
 	"github.com/lightningnetwork/lnd/lnwallet"
 )

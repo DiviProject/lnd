@@ -4,10 +4,10 @@ import (
 	"crypto/sha256"
 	"fmt"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcwallet/waddrmgr"
-	"github.com/btcsuite/btcwallet/wallet"
-	"github.com/btcsuite/btcwallet/walletdb"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcwallet/waddrmgr"
+	"github.com/Divicoin/btcwallet/wallet"
+	"github.com/Divicoin/btcwallet/walletdb"
 )
 
 const (
@@ -22,6 +22,10 @@ const (
 	// CoinTypeLitecoin specifies the BIP44 coin type for Litecoin key
 	// derivation.
 	CoinTypeLitecoin = 2
+
+	// CoinTypeDiviCoin specifies the BIP44 coin type for divicoin key
+	// derivation.
+	CoinTypeDiviCoin = 301
 )
 
 var (

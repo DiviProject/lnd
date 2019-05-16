@@ -1,7 +1,7 @@
 package lookout
 
 import (
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/wire"
 )
 
 // PunisherConfig houses the resources required by the Punisher.

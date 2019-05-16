@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
 	"github.com/lightningnetwork/lnd/lnwire"
 )
 

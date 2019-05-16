@@ -3,8 +3,8 @@ package input
 import (
 	"fmt"
 
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/txscript"
+	"github.com/Divicoin/btcd/wire"
 )
 
 // WitnessType determines how an output's witness will be generated. The

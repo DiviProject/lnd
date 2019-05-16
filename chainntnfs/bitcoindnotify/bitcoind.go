@@ -9,12 +9,12 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/btcsuite/btcd/btcjson"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcwallet/chain"
+	"github.com/Divicoin/btcd/btcjson"
+	"github.com/Divicoin/btcd/chaincfg"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
+	"github.com/Divicoin/btcwallet/chain"
 	"github.com/lightningnetwork/lnd/chainntnfs"
 	"github.com/lightningnetwork/lnd/queue"
 )

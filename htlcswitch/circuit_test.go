@@ -6,9 +6,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/btcsuite/btcd/btcec"
-	bitcoinCfg "github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/btcec"
+	bitcoinCfg "github.com/Divicoin/btcd/chaincfg"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lightning-onion"
 	"github.com/lightningnetwork/lnd/channeldb"
 	"github.com/lightningnetwork/lnd/htlcswitch"

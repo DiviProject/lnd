@@ -19,7 +19,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcutil"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/lightningnetwork/lnd/build"
 	"github.com/lightningnetwork/lnd/chanbackup"
@@ -104,7 +104,7 @@ type chainConfig struct {
 	Active   bool   `long:"active" description:"If the chain should be active or not."`
 	ChainDir string `long:"chaindir" description:"The directory to store the chain's data within."`
 
-	Node string `long:"node" description:"The blockchain interface to use." choice:"btcd" choice:"bitcoind" choice:"neutrino" choice:"ltcd" choice:"litecoind"`
+	Node string `long:"node" description:"The blockchain interface to use." choice:"divid" choice:"btcd" choice:"bitcoind" choice:"neutrino" choice:"ltcd" choice:"litecoind"`
 
 	MainNet  bool `long:"mainnet" description:"Use the main network"`
 	TestNet3 bool `long:"testnet" description:"Use the test network"`
@@ -223,6 +223,9 @@ type config struct {
 	BitcoindMode *bitcoindConfig `group:"bitcoind" namespace:"bitcoind"`
 	NeutrinoMode *neutrinoConfig `group:"neutrino" namespace:"neutrino"`
 
+	Divicoin	  *chainConfig    `group:"Divicoin" namespace:"divicoin"`
+	DividMode	  *bitcoindConfig `group:"divid" namespace:"divid"`
+
 	Litecoin      *chainConfig    `group:"Litecoin" namespace:"litecoin"`
 	LtcdMode      *btcdConfig     `group:"ltcd" namespace:"ltcd"`
 	LitecoindMode *bitcoindConfig `group:"litecoind" namespace:"litecoind"`
@@ -310,6 +313,17 @@ func loadConfig() (*config, error) {
 		},
 		LitecoindMode: &bitcoindConfig{
 			Dir:     defaultLitecoindDir,
+			RPCHost: defaultRPCHost,
+		},
+		Divicoin: &chainConfig {
+                        MinHTLC:       defaultBitcoinMinHTLCMSat,
+                        BaseFee:       defaultBitcoinBaseFeeMSat,
+                        FeeRate:       defaultBitcoinFeeRate,
+                        TimeLockDelta: defaultBitcoinTimeLockDelta,
+                        Node:          "divid",
+		},
+		DividMode: &bitcoindConfig {
+			Dir:     defaultBitcoindDir,
 			RPCHost: defaultRPCHost,
 		},
 		MaxPendingChannels: defaultMaxPendingChannels,
@@ -445,6 +459,7 @@ func loadConfig() (*config, error) {
 	cfg.LtcdMode.Dir = cleanAndExpandPath(cfg.LtcdMode.Dir)
 	cfg.BitcoindMode.Dir = cleanAndExpandPath(cfg.BitcoindMode.Dir)
 	cfg.LitecoindMode.Dir = cleanAndExpandPath(cfg.LitecoindMode.Dir)
+	cfg.DividMode.Dir = cleanAndExpandPath(cfg.DividMode.Dir)
 	cfg.Tor.PrivateKeyPath = cleanAndExpandPath(cfg.Tor.PrivateKeyPath)
 
 	// Ensure that the user didn't attempt to specify negative values for
@@ -575,7 +590,7 @@ func loadConfig() (*config, error) {
 
 	// Either Bitcoin must be active, or Litecoin must be active.
 	// Otherwise, we don't know which chain we're on.
-	case !cfg.Bitcoin.Active && !cfg.Litecoin.Active:
+	case !cfg.Bitcoin.Active && !cfg.Litecoin.Active && !cfg.Divicoin.Active:
 		return nil, fmt.Errorf("%s: either bitcoin.active or "+
 			"litecoin.active must be set to 1 (true)", funcName)
 
@@ -772,6 +787,97 @@ func loadConfig() (*config, error) {
 		// Finally we'll register the bitcoin chain as our current
 		// primary chain.
 		registeredChains.RegisterPrimaryChain(bitcoinChain)
+
+	case cfg.Divicoin.Active:
+		// Multiple networks can't be selected simultaneously.  Count
+		// number of network flags passed; assign active network params
+		// while we're at it.
+		numNets := 0
+		var diviParams divicoinNetParams
+		if cfg.Divicoin.MainNet {
+			numNets++
+			diviParams = diviMainNetParams
+		}
+		if cfg.Divicoin.TestNet3 {
+			numNets++
+			diviParams = diviTestNetParams
+		}
+
+		if numNets > 1 {
+			str := "%s: The mainnet, testnet, regtest, and " +
+				"simnet params can't be used together -- " +
+				"choose one of the four"
+			err := fmt.Errorf(str, funcName)
+			return nil, err
+		}
+
+		// The target network must be provided, otherwise, we won't
+		// know how to initialize the daemon.
+		if numNets == 0 {
+			str := "%s: either --bitcoin.mainnet, or " +
+				"bitcoin.testnet, bitcoin.simnet, or bitcoin.regtest " +
+				"must be specified"
+			err := fmt.Errorf(str, funcName)
+			return nil, err
+		}
+
+		// The litecoin chain is the current active chain. However
+		// throughout the codebase we required chaincfg.Params. So as a
+		// temporary hack, we'll mutate the default net params for
+		// bitcoin with the litecoin specific information.
+		applyDiviParams(&activeNetParams, &diviParams)
+
+		if cfg.Divicoin.Node == "neutrino" && cfg.Divicoin.MainNet {
+			str := "%s: neutrino isn't yet supported for " +
+				"bitcoin's mainnet"
+			err := fmt.Errorf(str, funcName)
+			return nil, err
+		}
+
+		if cfg.Divicoin.TimeLockDelta < minTimeLockDelta {
+			return nil, fmt.Errorf("timelockdelta must be at least %v",
+				minTimeLockDelta)
+		}
+
+		switch cfg.Divicoin.Node {
+		case "btcd":
+			err := parseRPCParams(
+				cfg.Divicoin, cfg.BtcdMode, divicoinChain, funcName,
+			)
+			if err != nil {
+				err := fmt.Errorf("unable to load RPC "+
+					"credentials for btcd: %v", err)
+				return nil, err
+			}
+		case "divid":
+			if cfg.Divicoin.SimNet {
+				return nil, fmt.Errorf("%s: bitcoind does not "+
+					"support simnet", funcName)
+			}
+
+			err := parseRPCParams(
+				cfg.Divicoin, cfg.DividMode, divicoinChain, funcName,
+			)
+			if err != nil {
+				err := fmt.Errorf("unable to load RPC "+
+					"credentials for divid: %v", err)
+				return nil, err
+			}
+		case "neutrino":
+			// No need to get RPC parameters.
+		default:
+			str := "%s: only btcd, bitcoind, and neutrino mode " +
+				"supported for bitcoin at this time"
+			return nil, fmt.Errorf(str, funcName)
+		}
+
+		cfg.Divicoin.ChainDir = filepath.Join(cfg.DataDir,
+			defaultChainSubDirname,
+			divicoinChain.String())
+
+		// Finally we'll register the bitcoin chain as our current
+		// primary chain.
+		registeredChains.RegisterPrimaryChain(divicoinChain)
 	}
 
 	// Ensure that the user didn't attempt to specify negative values for
@@ -1021,7 +1127,7 @@ func loadConfig() (*config, error) {
 
 // cleanAndExpandPath expands environment variables and leading ~ in the
 // passed path, cleans the result, and returns it.
-// This function is taken from https://github.com/btcsuite/btcd
+// This function is taken from https://github.com/Divicoin/btcd
 func cleanAndExpandPath(path string) string {
 	if path == "" {
 		return ""
@@ -1194,6 +1300,9 @@ func parseRPCParams(cConfig *chainConfig, nodeConfig interface{}, net chainCode,
 			daemonName = "litecoind"
 			confDir = conf.Dir
 			confFile = "litecoin"
+		case divicoinChain:
+			confDir = conf.Dir
+			confFile = "bitcoin"
 		}
 
 		// If not all of the parameters are set, we'll assume the user
@@ -1230,7 +1339,7 @@ func parseRPCParams(cConfig *chainConfig, nodeConfig interface{}, net chainCode,
 				err)
 		}
 		nConf.RPCUser, nConf.RPCPass = rpcUser, rpcPass
-	case "bitcoind", "litecoind":
+	case "bitcoind", "litecoind", "divid":
 		nConf := nodeConfig.(*bitcoindConfig)
 		rpcUser, rpcPass, zmqBlockHost, zmqTxHost, err :=
 			extractBitcoindRPCParams(confFile)

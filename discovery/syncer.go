@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
 	"github.com/lightningnetwork/lnd/lnwire"
 	"golang.org/x/time/rate"
 )

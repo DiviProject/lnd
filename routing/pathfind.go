@@ -7,7 +7,7 @@ import (
 
 	"container/heap"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/Divicoin/btcd/btcec"
 	"github.com/coreos/bbolt"
 
 	sphinx "github.com/lightningnetwork/lightning-onion"

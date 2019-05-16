@@ -9,8 +9,8 @@ import (
 
 	prand "math/rand"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lnd/channeldb"
 )
 

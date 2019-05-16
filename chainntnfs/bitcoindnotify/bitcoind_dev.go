@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcwallet/chain"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcwallet/chain"
 	"github.com/lightningnetwork/lnd/chainntnfs"
 )
 

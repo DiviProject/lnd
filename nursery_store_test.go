@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/wire"
 	"github.com/lightningnetwork/lnd/channeldb"
 )
 

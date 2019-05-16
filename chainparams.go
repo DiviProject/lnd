@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/btcsuite/btcd/chaincfg"
-	bitcoinCfg "github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	bitcoinWire "github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/chaincfg"
+	bitcoinCfg "github.com/Divicoin/btcd/chaincfg"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	bitcoinWire "github.com/Divicoin/btcd/wire"
 	"github.com/lightningnetwork/lnd/keychain"
+	divicoinCfg "github.com/Divicoin/btcd/chaincfg"
 	litecoinCfg "github.com/ltcsuite/ltcd/chaincfg"
 	litecoinWire "github.com/ltcsuite/ltcd/wire"
 )
@@ -26,6 +27,12 @@ type bitcoinNetParams struct {
 // corresponding RPC port of a daemon running on the particular network.
 type litecoinNetParams struct {
 	*litecoinCfg.Params
+	rpcPort  string
+	CoinType uint32
+}
+
+type divicoinNetParams struct {
+	*divicoinCfg.Params
 	rpcPort  string
 	CoinType uint32
 }
@@ -77,6 +84,22 @@ var regTestNetParams = bitcoinNetParams{
 	CoinType: keychain.CoinTypeTestnet,
 }
 
+// diviTestNetParams contains parameters specific to the 3rd version of the
+// test network.
+var diviTestNetParams = divicoinNetParams{
+	Params:   &divicoinCfg.TestNet3Params,
+	rpcPort:  "51477",
+	CoinType: keychain.CoinTypeDiviCoin,
+}
+
+// diviMainNetParams contains the parameters specific to the current
+// divicoin mainnet.
+var diviMainNetParams = divicoinNetParams{
+	Params:   &divicoinCfg.MainNetParams,
+	rpcPort:  "51475",
+	CoinType: keychain.CoinTypeDiviCoin,
+}
+
 // applyLitecoinParams applies the relevant chain configuration parameters that
 // differ for litecoin to the chain parameters typed for btcsuite derivation.
 // This function is used in place of using something like interface{} to
@@ -116,6 +139,47 @@ func applyLitecoinParams(params *bitcoinNetParams, litecoinParams *litecoinNetPa
 
 	params.rpcPort = litecoinParams.rpcPort
 	params.CoinType = litecoinParams.CoinType
+}
+
+// applyDiviParams applies the relevant chain configuration parameters that
+// differ for divicoin to the chain parameters typed for btcsuite derivation.
+// This function is used in place of using something like interface{} to
+// abstract over _which_ chain (or fork) the parameters are for.
+func applyDiviParams(params *bitcoinNetParams, diviParams *divicoinNetParams) {
+	params.Name = diviParams.Name
+	params.Net = bitcoinWire.BitcoinNet(diviParams.Net)
+	params.DefaultPort = diviParams.DefaultPort
+	params.CoinbaseMaturity = diviParams.CoinbaseMaturity
+
+	copy(params.GenesisHash[:], diviParams.GenesisHash[:])
+
+	// Address encoding magics
+	params.PubKeyHashAddrID = diviParams.PubKeyHashAddrID
+	params.ScriptHashAddrID = diviParams.ScriptHashAddrID
+	params.PrivateKeyID = diviParams.PrivateKeyID
+	params.WitnessPubKeyHashAddrID = diviParams.WitnessPubKeyHashAddrID
+	params.WitnessScriptHashAddrID = diviParams.WitnessScriptHashAddrID
+	params.Bech32HRPSegwit = diviParams.Bech32HRPSegwit
+
+	copy(params.HDPrivateKeyID[:], diviParams.HDPrivateKeyID[:])
+	copy(params.HDPublicKeyID[:], diviParams.HDPublicKeyID[:])
+
+	params.HDCoinType = diviParams.HDCoinType
+
+	checkPoints := make([]chaincfg.Checkpoint, len(diviParams.Checkpoints))
+	for i := 0; i < len(diviParams.Checkpoints); i++ {
+		var chainHash chainhash.Hash
+		copy(chainHash[:], diviParams.Checkpoints[i].Hash[:])
+
+		checkPoints[i] = chaincfg.Checkpoint{
+			Height: diviParams.Checkpoints[i].Height,
+			Hash:   &chainHash,
+		}
+	}
+	params.Checkpoints = checkPoints
+
+	params.rpcPort = diviParams.rpcPort
+	params.CoinType = diviParams.CoinType
 }
 
 // isTestnet tests if the given params correspond to a testnet

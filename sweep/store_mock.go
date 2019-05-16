@@ -1,8 +1,8 @@
 package sweep
 
 import (
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/wire"
 )
 
 // MockSweeperStore is a mock implementation of sweeper store. This type is

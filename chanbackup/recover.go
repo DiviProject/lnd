@@ -3,7 +3,7 @@ package chanbackup
 import (
 	"net"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/Divicoin/btcd/btcec"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/lightningnetwork/lnd/keychain"
 )

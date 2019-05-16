@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/txscript"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcd/txscript"
 	"github.com/lightningnetwork/lnd/input"
 	"github.com/lightningnetwork/lnd/lnwire"
 	"github.com/lightningnetwork/lnd/watchtower/blob"

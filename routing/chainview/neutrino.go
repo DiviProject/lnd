@@ -5,12 +5,12 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/rpcclient"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcutil/gcs/builder"
-	"github.com/lightninglabs/neutrino"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/rpcclient"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
+	"github.com/Divicoin/btcutil/gcs/builder"
+	"github.com/Divicoin/neutrino"
 	"github.com/lightningnetwork/lnd/channeldb"
 )
 

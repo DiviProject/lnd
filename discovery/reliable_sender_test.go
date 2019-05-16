@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"testing"
 	"time"
-
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/Divicoin/btcd/btcec"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/lightningnetwork/lnd/lnpeer"
 	"github.com/lightningnetwork/lnd/lnwire"

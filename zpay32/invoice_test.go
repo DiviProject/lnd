@@ -11,11 +11,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcd/chaincfg"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
 	"github.com/lightningnetwork/lnd/lnwire"
 
 	litecoinCfg "github.com/ltcsuite/ltcd/chaincfg"

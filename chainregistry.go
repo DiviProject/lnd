@@ -12,13 +12,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/rpcclient"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcwallet/chain"
-	"github.com/btcsuite/btcwallet/wallet"
-	"github.com/btcsuite/btcwallet/walletdb"
-	"github.com/lightninglabs/neutrino"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/rpcclient"
+	"github.com/Divicoin/btcutil"
+	"github.com/Divicoin/btcwallet/chain"
+	"github.com/Divicoin/btcwallet/wallet"
+	"github.com/Divicoin/btcwallet/walletdb"
+	"github.com/Divicoin/neutrino"
 	"github.com/lightningnetwork/lnd/chainntnfs"
 	"github.com/lightningnetwork/lnd/chainntnfs/bitcoindnotify"
 	"github.com/lightningnetwork/lnd/chainntnfs/btcdnotify"
@@ -67,7 +67,7 @@ var defaultBtcChannelConstraints = channeldb.ChannelConstraints{
 	MaxAcceptedHtlcs: input.MaxHTLCNumber / 2,
 }
 
-// defaultLtcChannelConstraints is the default set of channel constraints that are
+// defaultLtcChannelConstrain	ts is the default set of channel constraints that are
 // meant to be used when initially funding a Litecoin channel.
 var defaultLtcChannelConstraints = channeldb.ChannelConstraints{
 	DustLimit:        defaultLitecoinDustLimit,
@@ -84,6 +84,9 @@ const (
 
 	// litecoinChain is Litecoin's testnet chain.
 	litecoinChain
+
+	// divicoinChain is divi's testnet chain.
+	divicoinChain
 )
 
 // String returns a string representation of the target chainCode.
@@ -93,6 +96,8 @@ func (c chainCode) String() string {
 		return "bitcoin"
 	case litecoinChain:
 		return "litecoin"
+	case divicoinChain:
+		return "divicoin"
 	default:
 		return "kekcoin"
 	}
@@ -143,6 +148,12 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 	ltndLog.Infof("Primary chain is set to: %v",
 		registeredChains.PrimaryChain())
 
+	if registeredChains.PrimaryChain() == divicoinChain {
+		homeChainConfig = cfg.Divicoin
+	}
+	ltndLog.Infof("Primary chain is set to: %v",
+		registeredChains.PrimaryChain())
+
 	cc := &chainControl{}
 
 	switch registeredChains.PrimaryChain() {
@@ -166,6 +177,16 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 		cc.feeEstimator = lnwallet.NewStaticFeeEstimator(
 			defaultLitecoinStaticFeePerKW, 0,
 		)
+	case divicoinChain:
+               cc.routingPolicy = htlcswitch.ForwardingPolicy{
+                       MinHTLC:       cfg.Divicoin.MinHTLC,
+                       BaseFee:       cfg.Divicoin.BaseFee,
+                       FeeRate:       cfg.Divicoin.FeeRate,
+                       TimeLockDelta: cfg.Divicoin.TimeLockDelta,
+               }
+               cc.feeEstimator = lnwallet.NewStaticFeeEstimator(
+                        defaultBitcoinStaticFeePerKW, 0,
+               )
 	default:
 		return nil, nil, fmt.Errorf("Default routing policy for "+
 			"chain %v is unknown", registeredChains.PrimaryChain())
@@ -215,13 +236,15 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 			activeNetParams.Params, neutrinoCS,
 		)
 
-	case "bitcoind", "litecoind":
+	case "bitcoind", "litecoind", "divid":
 		var bitcoindMode *bitcoindConfig
 		switch {
 		case cfg.Bitcoin.Active:
 			bitcoindMode = cfg.BitcoindMode
 		case cfg.Litecoin.Active:
 			bitcoindMode = cfg.LitecoindMode
+		case cfg.Divicoin.Active:
+			bitcoindMode = cfg.DividMode
 		}
 		// Otherwise, we'll be speaking directly via RPC and ZMQ to a
 		// bitcoind node. If the specified host for the btcd/ltcd RPC
@@ -324,6 +347,23 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 			if err := cc.feeEstimator.Start(); err != nil {
 				return nil, nil, err
 			}
+		} else if cfg.Divicoin.Active && !cfg.Divicoin.RegTest {
+			ltndLog.Infof("Initializing divid backed fee estimator")
+
+			// Finally, we'll re-initialize the fee estimator, as
+			// if we're using divid as a backend, then we can
+			// use live fee estimates, rather than a statically
+			// coded value.
+			fallBackFeeRate := lnwallet.SatPerKVByte(25 * 1000)
+			cc.feeEstimator, err = lnwallet.NewBitcoindFeeEstimator(
+				*rpcConfig, fallBackFeeRate.FeePerKWeight(),
+			)
+			if err != nil {
+				return nil, nil, err
+			}
+			if err := cc.feeEstimator.Start(); err != nil {
+				return nil, nil, err
+			}
 		}
 	case "btcd", "ltcd":
 		// Otherwise, we'll be speaking directly via RPC to a node.
@@ -358,7 +398,6 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 				return nil, nil, err
 			}
 		}
-
 		// If the specified host for the btcd/ltcd RPC server already
 		// has a port specified, then we use that directly. Otherwise,
 		// we assume the default port according to the selected chain
@@ -370,7 +409,6 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 			btcdHost = fmt.Sprintf("%v:%v", btcdMode.RPCHost,
 				activeNetParams.rpcPort)
 		}
-
 		btcdUser := btcdMode.RPCUser
 		btcdPass := btcdMode.RPCPass
 		rpcConfig := &rpcclient.ConnConfig{
@@ -389,7 +427,6 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 		if err != nil {
 			return nil, nil, err
 		}
-
 		// Finally, we'll create an instance of the default chain view to be
 		// used within the routing layer.
 		cc.chainView, err = chainview.NewBtcdFilteredChainView(*rpcConfig)
@@ -405,7 +442,6 @@ func newChainControlFromConfig(cfg *config, chanDB *channeldb.DB,
 		if err != nil {
 			return nil, nil, err
 		}
-
 		walletConfig.ChainSource = chainRPC
 
 		// If we're not in simnet or regtest mode, then we'll attempt
@@ -553,7 +589,7 @@ var (
 	//
 	// TODO(roasbeef): extend and collapse these and chainparams.go into
 	// struct like chaincfg.Params
-	chainDNSSeeds = map[chainhash.Hash][][2]string{
+	chainDNSSeeds = map[chainhash.Hash][][3]string{
 		bitcoinMainnetGenesis: {
 			{
 				"nodes.lightning.directory",

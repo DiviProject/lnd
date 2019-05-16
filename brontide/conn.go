@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/Divicoin/btcd/btcec"
 	"github.com/lightningnetwork/lnd/lnwire"
 )
 

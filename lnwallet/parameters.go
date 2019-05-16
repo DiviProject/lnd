@@ -1,8 +1,8 @@
 package lnwallet
 
 import (
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcwallet/wallet/txrules"
+	"github.com/Divicoin/btcutil"
+	"github.com/Divicoin/btcwallet/wallet/txrules"
 	"github.com/lightningnetwork/lnd/input"
 )
 

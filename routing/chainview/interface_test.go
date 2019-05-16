@@ -12,20 +12,20 @@ import (
 	"testing"
 	"time"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/btcjson"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/integration/rpctest"
-	"github.com/btcsuite/btcd/rpcclient"
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcutil"
-	"github.com/btcsuite/btcwallet/chain"
-	"github.com/btcsuite/btcwallet/walletdb"
-	_ "github.com/btcsuite/btcwallet/walletdb/bdb" // Required to register the boltdb walletdb implementation.
+	"github.com/Divicoin/btcd/btcec"
+	"github.com/Divicoin/btcd/btcjson"
+	"github.com/Divicoin/btcd/chaincfg"
+	"github.com/Divicoin/btcd/chaincfg/chainhash"
+	"github.com/Divicoin/btcd/integration/rpctest"
+	"github.com/Divicoin/btcd/rpcclient"
+	"github.com/Divicoin/btcd/txscript"
+	"github.com/Divicoin/btcd/wire"
+	"github.com/Divicoin/btcutil"
+	"github.com/Divicoin/btcwallet/chain"
+	"github.com/Divicoin/btcwallet/walletdb"
+	_ "github.com/Divicoin/btcwallet/walletdb/bdb" // Required to register the boltdb walletdb implementation.
 
-	"github.com/lightninglabs/neutrino"
+	"github.com/Divicoin/neutrino"
 	"github.com/lightningnetwork/lnd/channeldb"
 )
 
