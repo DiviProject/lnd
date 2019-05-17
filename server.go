@@ -23,7 +23,7 @@ import (
 	"github.com/Divicoin/btcutil"
 	"github.com/coreos/bbolt"
 	"github.com/go-errors/errors"
-	sphinx "github.com/lightningnetwork/lightning-onion"
+	sphinx "github.com/Divicoin/lightning-onion"
 	"github.com/lightningnetwork/lnd/autopilot"
 	"github.com/lightningnetwork/lnd/brontide"
 	"github.com/lightningnetwork/lnd/chanbackup"

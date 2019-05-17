@@ -19,7 +19,7 @@ import (
 	"github.com/Divicoin/btcd/txscript"
 	"github.com/Divicoin/btcd/wire"
 	"github.com/go-errors/errors"
-	sphinx "github.com/lightningnetwork/lightning-onion"
+	sphinx "github.com/Divicoin/lightning-onion"
 	"github.com/lightningnetwork/lnd/chainntnfs"
 	"github.com/lightningnetwork/lnd/channeldb"
 	"github.com/lightningnetwork/lnd/contractcourt"

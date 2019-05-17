@@ -6,7 +6,7 @@ import (
 	"io"
 
 	"github.com/Divicoin/btcd/btcec"
-	"github.com/lightningnetwork/lightning-onion"
+	"github.com/Divicoin/lightning-onion"
 	"github.com/lightningnetwork/lnd/lnwire"
 )
 

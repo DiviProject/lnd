@@ -10,7 +10,7 @@ import (
 	"github.com/btcsuite/btclog"
 	"github.com/jrick/logrotate/rotator"
 	"github.com/Divicoin/neutrino"
-	sphinx "github.com/lightningnetwork/lightning-onion"
+	sphinx "github.com/Divicoin/lightning-onion"
 	"github.com/lightningnetwork/lnd/autopilot"
 	"github.com/lightningnetwork/lnd/build"
 	"github.com/lightningnetwork/lnd/chainntnfs"

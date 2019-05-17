@@ -10,7 +10,7 @@ import (
 	"github.com/Divicoin/btcd/btcec"
 	"github.com/coreos/bbolt"
 
-	sphinx "github.com/lightningnetwork/lightning-onion"
+	sphinx "github.com/Divicoin/lightning-onion"
 	"github.com/lightningnetwork/lnd/channeldb"
 	"github.com/lightningnetwork/lnd/lnwire"
 )
